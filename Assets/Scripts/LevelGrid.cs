@@ -39,7 +39,9 @@ public class LevelGrid
         // Using do-while loop to avoid next food object spawn right on top of the snake
         do {
             foodGridPosition = new Vector2Int(Random.Range(-width, width), Random.Range(-height, height));
-        } while (snake.GetGridPosition() == foodGridPosition);
+        } while (snake.GetFullSnakeGridPositionList().IndexOf(foodGridPosition) != -1);
+        // It means that as long as the randomized food spawn location is not coinciding with the any of the block of snake, spawn the food
+        // If by chance it overlaps, randomize food spawn position again
         
 
         // Spawn the food gameobject of type spriterenderer
@@ -50,7 +52,7 @@ public class LevelGrid
 
     }
 
-    public void SnakeMoved(Vector2Int snakeGridPosition)
+    public bool TrySnakeEatFood(Vector2Int snakeGridPosition)
     {
         // Function to identify if the snake has eaten the food
         if(snakeGridPosition == foodGridPosition)
@@ -58,6 +60,11 @@ public class LevelGrid
             Object.Destroy(foodGameObject);
             SpawnFood();
             Debug.Log("Snake Ate the Food");
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

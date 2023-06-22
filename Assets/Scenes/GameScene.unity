@@ -481,4 +481,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e3296ece0cbbff4eadcc8173f0a3756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridMoveTimerMax: 0.25
+  gridMoveTimerMax: 0.1

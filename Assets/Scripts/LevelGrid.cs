@@ -20,6 +20,13 @@ public class LevelGrid
         this.height = height;
     }
 
+    public Vector2Int GetLevelGridExtents()
+    {
+        // Method to return the grid extents of level grid so that we can confine the snake on the screen
+        Vector2Int gridExtents = new Vector2Int(width, height);
+        return gridExtents;
+    }
+
     public void Setup(Snake snake)
     {
         this.snake = snake;

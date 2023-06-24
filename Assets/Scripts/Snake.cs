@@ -27,7 +27,7 @@ public class Snake : MonoBehaviour
         snakeSegmentsTransformList = new List<Transform>(); // Initialize the snake segments list
         snakeSegmentsTransformList.Add(this.transform); // Adding the snake head to the list of segments
 
-        snakeBodySize = 0;   // Initially there will be only snake head will be present
+        snakeBodySize = 1;   // Initially there will be only snake head
         //snakeMovePositionList = new List<Vector2Int>(); // initialize the list
     }
 
@@ -86,9 +86,12 @@ public class Snake : MonoBehaviour
             gridMoveTimer -= gridMoveTimerMax;
 
             // Move the snake segments from its end towards snake head.. It simulates the forward motion of snake
-            for (int i = snakeSegmentsTransformList.Count - 1; i > 0; i--)
+            if(snakeBodySize != 1)
             {
-                snakeSegmentsTransformList[i].position = snakeSegmentsTransformList[i - 1].position;
+                for (int i = snakeSegmentsTransformList.Count - 1; i > 0; i--)
+                {
+                    snakeSegmentsTransformList[i].position = snakeSegmentsTransformList[i - 1].position;
+                }
             }
 
             gridPosition += gridMoveDirection;
@@ -102,10 +105,10 @@ public class Snake : MonoBehaviour
 
     private void KeepSnakeOnScreen()
     {
-        if(Mathf.Abs(gridPosition.x) >= levelGrid.GetLevelGridExtents().x + 0.5f)
+        if(Mathf.Abs(gridPosition.x) > levelGrid.GetLevelGridExtents().x + 0.5f)
         {
             gridPosition.x *= -1;
-        } else if(Mathf.Abs(gridPosition.y) >= levelGrid.GetLevelGridExtents().y + 1f)
+        } else if(Mathf.Abs(gridPosition.y) > levelGrid.GetLevelGridExtents().y + 1f)
         {
             gridPosition.y *= -1;
         }
@@ -138,12 +141,11 @@ public class Snake : MonoBehaviour
     {
         if(collision.tag == "MassGainer")
         {
-            Debug.Log("Snake Ate Food");
             SnakeGrow(); // Grow the snake after it eats the food
             Destroy(collision.gameObject);
         } else if(collision.tag == "MassBurner")
         {
-            Debug.Log("Snake Got Burnt");
+            SnakeShrink();
         }
     }
 
@@ -152,5 +154,28 @@ public class Snake : MonoBehaviour
         Transform _segment = Instantiate(segmentPrefab);
         _segment.position = snakeSegmentsTransformList[snakeSegmentsTransformList.Count - 1].position; // setting the position of snake segment as end of snake
         snakeSegmentsTransformList.Add( _segment );
+        snakeBodySize++;  // increase the snake body size count by 1
+        //Debug.Log("Snake size: " + snakeBodySize);
+    }
+
+    private void SnakeShrink()
+    {
+        // Remove the last 2 segment of the snake and destroy the game objects
+        // decrease the snake size -> if snake size <= 0 -> Game Over
+        snakeBodySize -= 2;
+        if (snakeBodySize > 0)
+        {
+            List<Transform> segmentsToRemove = snakeSegmentsTransformList.GetRange(snakeSegmentsTransformList.Count - 2, 2);
+            foreach(Transform segmentBody in segmentsToRemove)
+            {
+                Destroy(segmentBody.gameObject);
+            }
+            // Need to remove the segment transforms from the list
+            snakeSegmentsTransformList.RemoveRange(snakeSegmentsTransformList.Count - 2, 2);
+        }
+        else
+        {
+            Debug.Log("Game Over");
+        }
     }
 }

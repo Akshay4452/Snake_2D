@@ -102,10 +102,10 @@ public class Snake : MonoBehaviour
 
     private void KeepSnakeOnScreen()
     {
-        if(Mathf.Abs(gridPosition.x) >= levelGrid.GetLevelGridExtents().x)
+        if(Mathf.Abs(gridPosition.x) >= levelGrid.GetLevelGridExtents().x + 0.5f)
         {
             gridPosition.x *= -1;
-        } else if(Mathf.Abs(gridPosition.y) >= levelGrid.GetLevelGridExtents().y)
+        } else if(Mathf.Abs(gridPosition.y) >= levelGrid.GetLevelGridExtents().y + 1f)
         {
             gridPosition.y *= -1;
         }

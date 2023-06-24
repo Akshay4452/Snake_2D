@@ -2,6 +2,7 @@ using CodeMonkey.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Snake : MonoBehaviour
 {
@@ -146,6 +147,10 @@ public class Snake : MonoBehaviour
         } else if(collision.tag == "MassBurner")
         {
             SnakeShrink();
+            Destroy(collision.gameObject);
+        }  else if (collision.tag == "SnakeBody")
+        {
+            SceneManager.LoadScene("GameOverScene");
         }
     }
 
@@ -175,7 +180,12 @@ public class Snake : MonoBehaviour
         }
         else
         {
-            Debug.Log("Game Over");
+            SceneManager.LoadScene("GameOverScene");
         }
+    }
+
+    public int GetSnakeSize()
+    {
+        return snakeBodySize;
     }
 }

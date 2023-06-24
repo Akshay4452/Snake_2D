@@ -1,11 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+enum ConsumableType
+{
+    MassGainer,
+    MassBurner
+} 
 
 public class Consumables : MonoBehaviour
 {
     private float spawnDuration;
     private float timer;
+    [SerializeField] private ConsumableType foodType;
 
     // Start is called before the first frame update
     void Start()

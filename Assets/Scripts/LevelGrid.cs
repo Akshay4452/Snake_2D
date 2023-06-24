@@ -48,8 +48,16 @@ public class LevelGrid
 
     public SpriteRenderer GetFoodItemToSpawn()
     {
-        SpriteRenderer food = GameAssets.Instance.foodItems[Random.Range(0, GameAssets.Instance.foodItems.Count)];
-        return food;
+        // When Snake length is more than one then only randomize the food items otherwise spawn only mass gainer when we have snake with length 1
+        if (snake.GetSnakeSize() > 1)
+        {
+            SpriteRenderer food = GameAssets.Instance.foodItems[Random.Range(0, GameAssets.Instance.foodItems.Count)];
+            return food;
+        } else
+        {
+            SpriteRenderer food = GameAssets.Instance.foodItems[0];
+            return food;
+        } 
     }
 
     //public bool TrySnakeEatFood(Vector2Int snakeGridPosition)

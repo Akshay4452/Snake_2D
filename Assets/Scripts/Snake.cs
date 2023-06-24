@@ -11,8 +11,11 @@ public class Snake : MonoBehaviour
     private LevelGrid levelGrid; // holding the reference to the LevelGrid script
     [SerializeField] private float gridMoveTimerMax; // Time set between two movement instances
 
+    private List<Transform> snakeSegmentsTransformList; // creating list of Transform component to store the snake segment transform
+    [SerializeField] private Transform segmentPrefab;
+
     private int snakeBodySize; // variable to store the length of snake
-    private List<Vector2Int> snakeMovePositionList; // List to store location of all parts of the snake
+    //private List<Vector2Int> snakeMovePositionList; // List to store location of all parts of the snake
 
     private void Awake()
     {
@@ -21,8 +24,11 @@ public class Snake : MonoBehaviour
         //gridMoveTimerMax = 1f;  // setting gridMoveTimer equals to 1 sec
         gridMoveTimer = gridMoveTimerMax;
 
+        snakeSegmentsTransformList = new List<Transform>(); // Initialize the snake segments list
+        snakeSegmentsTransformList.Add(this.transform); // Adding the snake head to the list of segments
+
         snakeBodySize = 0;   // Initially there will be only snake head will be present
-        snakeMovePositionList = new List<Vector2Int>(); // initialize the list
+        //snakeMovePositionList = new List<Vector2Int>(); // initialize the list
     }
 
     public void Setup(LevelGrid levelGrid)
@@ -78,32 +84,14 @@ public class Snake : MonoBehaviour
         if (gridMoveTimer >= gridMoveTimerMax)
         {
             gridMoveTimer -= gridMoveTimerMax;
-            // Adding the current grid position of the snake to the snakeMovePositionList
-            // snakeMovePositionList.Insert(0, gridPosition);
+
+            // Move the snake segments from its end towards snake head.. It simulates the forward motion of snake
+            for (int i = snakeSegmentsTransformList.Count - 1; i > 0; i--)
+            {
+                snakeSegmentsTransformList[i].position = snakeSegmentsTransformList[i - 1].position;
+            }
 
             gridPosition += gridMoveDirection;
-
-            // Increase the body size of the snake once it has eaten the food
-            // bool snakeAteFood = levelGrid.TrySnakeEatFood(gridPosition);
-            //if (snakeAteFood)
-            //{
-            //    // snake has eaten the food, grow its body
-            //    snakeBodySize++;
-            //}
-
-            //if (snakeMovePositionList.Count >= snakeBodySize + 1) 
-            //{
-            //    // remove the last element of the snakemovepositionlist
-            //    snakeMovePositionList.RemoveAt(snakeMovePositionList.Count- 1);
-            //}
-
-            //// We create and destroy the sprites once we move from particular position
-            //for(int i = 0; i < snakeMovePositionList.Count; i++)
-            //{
-            //    Vector2Int snakeMovePosition = snakeMovePositionList[i];
-            //    World_Sprite worldSprite = World_Sprite.Create(new Vector3(snakeMovePosition.x, snakeMovePosition.y), Vector3.one * 0.5f, Color.red);
-            //    FunctionTimer.Create(worldSprite.DestroySelf, gridMoveTimerMax);
-            //}
 
             transform.position = new Vector3(gridPosition.x, gridPosition.y);
             transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirection));
@@ -139,21 +127,30 @@ public class Snake : MonoBehaviour
         return gridPosition;
     }
 
-    public List<Vector2Int> GetFullSnakeGridPositionList()
-    {
-        List<Vector2Int> gridPositionList = new List<Vector2Int>() { gridPosition };
-        gridPositionList.AddRange(snakeMovePositionList);
-        return gridPositionList;
-    }
+    //public List<Vector2Int> GetFullSnakeGridPositionList()
+    //{
+    //    List<Vector2Int> gridPositionList = new List<Vector2Int>() { gridPosition };
+    //    gridPositionList.AddRange(snakeMovePositionList);
+    //    return gridPositionList;
+    //}
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "MassGainer")
         {
             Debug.Log("Snake Ate Food");
+            SnakeGrow(); // Grow the snake after it eats the food
+            Destroy(collision.gameObject);
         } else if(collision.tag == "MassBurner")
         {
             Debug.Log("Snake Got Burnt");
         }
+    }
+
+    private void SnakeGrow()
+    {
+        Transform _segment = Instantiate(segmentPrefab);
+        _segment.position = snakeSegmentsTransformList[snakeSegmentsTransformList.Count - 1].position; // setting the position of snake segment as end of snake
+        snakeSegmentsTransformList.Add( _segment );
     }
 }

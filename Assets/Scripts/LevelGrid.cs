@@ -11,7 +11,8 @@ public class LevelGrid
     private int width;
     private int height;
     private float foodSpawnTime;
-    private Snake snake;  // Holding the reference to the snake 
+    private Snake snake;  // Holding the reference to the snake
+    private GameHandler gameHandler;
 
     // Constructor to initialize the width and height of the level grid
     public LevelGrid(int width, int height)
@@ -34,14 +35,10 @@ public class LevelGrid
         //SpawnFood();
     }
 
-    //public void SpawnFood()
-    //{
-    //    foodGridPosition = GetSpawnPosition();
-    //    foodGameObject = GetFoodItemToSpawn();
-
-    //    // Spawn food at random position in the scene
-    //    foodGameObject.transform.position = new Vector3(foodGridPosition.x, foodGridPosition.y);
-    //}
+    public void GameHandlerSetup(GameHandler gameHandler)
+    {
+        this.gameHandler = gameHandler;
+    }
 
     public Vector2Int GetSpawnPosition()
     {
@@ -58,10 +55,9 @@ public class LevelGrid
     //public bool TrySnakeEatFood(Vector2Int snakeGridPosition)
     //{
     //    // Function to identify if the snake has eaten the food
-    //    if(snakeGridPosition == foodGridPosition)
+    //    if (snakeGridPosition == GetSpawnPosition())
     //    {
     //        Object.Destroy(foodGameObject);
-    //        SpawnFood();
     //        Debug.Log("Snake Ate the Food");
     //        return true;
     //    }

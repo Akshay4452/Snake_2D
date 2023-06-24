@@ -5,15 +5,14 @@ using UnityEngine;
 
 public class GameHandler : MonoBehaviour
 {
-    [SerializeField] Consumables consumables;
     [SerializeField] Snake snake;
-    [SerializeField] private int foodSpawnDelay;
+    //[SerializeField] private float foodSpawnDuration;
+    [SerializeField] private float foodSpawnDelay;
     private LevelGrid levelGrid;
 
     private int gridX = 19;
     private int gridY = 10;   // grid extents in X and Y direction
 
-    private float foodSpawnDuration;
     private Vector2Int foodGridPosition;
     private SpriteRenderer foodGameObject;  // storing the food game object to identify which food to be deleted after snake has eaten it
     private List<SpriteRenderer> totalFoodSpawned; // List to store the total food items spawned on the game scene
@@ -23,12 +22,12 @@ public class GameHandler : MonoBehaviour
     private void Start()
     {
         levelGrid = new LevelGrid(gridX, gridY); // Instantiating the levelGrid object
-        foodSpawnDuration = consumables.spawnDuration;
         snake.Setup(levelGrid);
         levelGrid.Setup(snake);
-        totalFoodSpawned= new List<SpriteRenderer>();
+        levelGrid.GameHandlerSetup(this);
+        totalFoodSpawned = new List<SpriteRenderer>();
 
-        timer = foodSpawnDuration;
+        timer = foodSpawnDelay;
 
         SpawnFood(); // spawn the food when game starts
     }
@@ -45,10 +44,20 @@ public class GameHandler : MonoBehaviour
             // Instantiate the Food Game Object
             foodGameObject = Instantiate(levelGrid.GetFoodItemToSpawn(), new Vector3(foodGridPosition.x, foodGridPosition.y), Quaternion.identity);
         }
+        Debug.Log("Food items in the list: " + totalFoodSpawned.Count);
     }
 
     private void Update()
     {
-        
+        if(timer > 0)
+        {
+            timer -= Time.deltaTime;
+        }
+        else
+        {
+            SpawnFood();
+            totalFoodSpawned.RemoveAt(totalFoodSpawned.Count - 1);
+            timer = foodSpawnDelay;
+        }
     }
 }

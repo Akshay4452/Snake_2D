@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Consumables : MonoBehaviour
 {
-    [HideInInspector]
-    public float spawnDuration;
+    private float spawnDuration;
     private float timer;
 
     // Start is called before the first frame update

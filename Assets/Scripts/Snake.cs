@@ -1,6 +1,7 @@
 using CodeMonkey.Utils;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -100,6 +101,9 @@ public class Snake : MonoBehaviour
             transform.position = new Vector3(gridPosition.x, gridPosition.y);
             transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirection));
 
+            // Enable the BoxCollider2D of snake segment as snake has moved by 1 unit
+            snakeSegmentsTransformList[snakeBodySize-1].GetComponent<BoxCollider2D>().enabled = true;
+
             KeepSnakeOnScreen();
         }  
     }
@@ -133,9 +137,9 @@ public class Snake : MonoBehaviour
 
     //public List<Vector2Int> GetFullSnakeGridPositionList()
     //{
-    //    List<Vector2Int> gridPositionList = new List<Vector2Int>() { gridPosition };
-    //    gridPositionList.AddRange(snakeMovePositionList);
-    //    return gridPositionList;
+    //    List<Vector2Int> snakeGridPositionList = new List<Vector2Int>();
+    //    snakeGridPositionList.AddRange(snakeSegmentsTransformList);
+    //    return snakeGridPositionList;
     //}
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -154,9 +158,12 @@ public class Snake : MonoBehaviour
         }
     }
 
+
+
     private void SnakeGrow()
     {
         Transform _segment = Instantiate(segmentPrefab);
+        _segment.GetComponent<BoxCollider2D>().enabled = false;
         _segment.position = snakeSegmentsTransformList[snakeSegmentsTransformList.Count - 1].position; // setting the position of snake segment as end of snake
         snakeSegmentsTransformList.Add( _segment );
         snakeBodySize++;  // increase the snake body size count by 1

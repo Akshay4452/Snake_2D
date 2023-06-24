@@ -41,11 +41,11 @@ public class GameHandler : MonoBehaviour
 
         if(totalFoodSpawned.Count <= maxFoodItemsOnScreen)
         {
-            // Instantiate the Food Game Object
             foodGameObject = Instantiate(levelGrid.GetFoodItemToSpawn(), new Vector3(foodGridPosition.x, foodGridPosition.y), Quaternion.identity);
         }
         //Debug.Log("Food items in the list: " + totalFoodSpawned.Count);
     }
+
 
     private void Update()
     {

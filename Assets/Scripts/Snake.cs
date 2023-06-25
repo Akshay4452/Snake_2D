@@ -19,6 +19,8 @@ public class Snake : MonoBehaviour
     private int snakeBodySize; // variable to store the length of snake
     //private List<Vector2Int> snakeMovePositionList; // List to store location of all parts of the snake
 
+    [SerializeField] private ScoreHandler scoreHandler; // Reference of ScoreHandler script
+
     private void Awake()
     {
         gridMoveDirection = new Vector2Int(1, 0); // by default snake will move towards right
@@ -110,7 +112,7 @@ public class Snake : MonoBehaviour
 
     private void KeepSnakeOnScreen()
     {
-        if(Mathf.Abs(gridPosition.x) > levelGrid.GetLevelGridExtents().x + 0.5f)
+        if(Mathf.Abs(gridPosition.x) > levelGrid.GetLevelGridExtents().x + 1f)
         {
             gridPosition.x *= -1;
         } else if(Mathf.Abs(gridPosition.y) > levelGrid.GetLevelGridExtents().y + 1f)
@@ -144,15 +146,15 @@ public class Snake : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "MassGainer")
+        if(collision.CompareTag("MassGainer"))
         {
             SnakeGrow(); // Grow the snake after it eats the food
             Destroy(collision.gameObject);
-        } else if(collision.tag == "MassBurner")
+        } else if(collision.CompareTag("MassBurner"))
         {
             SnakeShrink();
             Destroy(collision.gameObject);
-        }  else if (collision.tag == "SnakeBody")
+        }  else if (collision.CompareTag("SnakeBody"))
         {
             SceneManager.LoadScene("GameOverScene");
         }
@@ -167,7 +169,7 @@ public class Snake : MonoBehaviour
         _segment.position = snakeSegmentsTransformList[snakeSegmentsTransformList.Count - 1].position; // setting the position of snake segment as end of snake
         snakeSegmentsTransformList.Add( _segment );
         snakeBodySize++;  // increase the snake body size count by 1
-        //Debug.Log("Snake size: " + snakeBodySize);
+        scoreHandler.ScoreIncrease(); // UPdate the score as snake grows
     }
 
     private void SnakeShrink()
@@ -184,6 +186,7 @@ public class Snake : MonoBehaviour
             }
             // Need to remove the segment transforms from the list
             snakeSegmentsTransformList.RemoveRange(snakeSegmentsTransformList.Count - 2, 2);
+            scoreHandler.ScoreDecrease();
         }
         else
         {

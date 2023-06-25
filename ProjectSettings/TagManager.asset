@@ -7,6 +7,9 @@ TagManager:
   - MassBurner
   - MassGainer
   - SnakeBody
+  - SpeedBoost
+  - Shield
+  - ScoreBoost
   layers:
   - Default
   - TransparentFX

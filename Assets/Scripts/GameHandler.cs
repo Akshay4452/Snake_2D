@@ -46,6 +46,11 @@ public class GameHandler : MonoBehaviour
         //Debug.Log("Food items in the list: " + totalFoodSpawned.Count);
     }
 
+    private void SpawnPowerUps()
+    {
+
+    }
+
 
     private void Update()
     {

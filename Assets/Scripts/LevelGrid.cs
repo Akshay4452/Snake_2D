@@ -10,7 +10,6 @@ public class LevelGrid
     //private SpriteRenderer foodGameObject;  // storing the food game object to identify which food to be deleted after snake has eaten it
     private int width;
     private int height;
-    private float foodSpawnTime;
     private Snake snake;  // Holding the reference to the snake
     private GameHandler gameHandler;
 
@@ -58,6 +57,12 @@ public class LevelGrid
             SpriteRenderer food = GameAssets.Instance.foodItems[0];
             return food;
         } 
+    }
+
+    public SpriteRenderer GetPowerUpToSpawn()
+    {
+        SpriteRenderer powerUp = GameAssets.Instance.powerUps[Random.Range(0, GameAssets.Instance.powerUps.Count)];
+        return powerUp;
     }
 
     //public bool TrySnakeEatFood(Vector2Int snakeGridPosition)

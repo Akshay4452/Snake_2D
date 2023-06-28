@@ -6,14 +6,17 @@ using UnityEngine.SceneManagement;
 public enum ConsumableType
 {
     MassGainer,
-    MassBurner
+    MassBurner,
+    Shield,
+    ScoreBooster,
+    SpeedBooster
 } 
 
 public class Consumables : MonoBehaviour
 {
     private float spawnDuration;
     private float timer;
-    [SerializeField] private ConsumableType consumableType;
+    [field: SerializeField] public ConsumableType consumableType { get; private set; }
 
     // Start is called before the first frame update
     void Start()

@@ -1,4 +1,5 @@
 using CodeMonkey.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -44,6 +45,7 @@ public class Snake : MonoBehaviour
     {
         HandleInput();
         HandleGridMovement();
+
     }
 
     private void HandleInput()
@@ -112,6 +114,7 @@ public class Snake : MonoBehaviour
 
     private void KeepSnakeOnScreen()
     {
+        // Screen Wrapping Function
         if(Mathf.Abs(gridPosition.x) > levelGrid.GetLevelGridExtents().x + 1f)
         {
             gridPosition.x *= -1;
@@ -137,30 +140,33 @@ public class Snake : MonoBehaviour
         return gridPosition;
     }
 
-    //public List<Vector2Int> GetFullSnakeGridPositionList()
+    //public List<Vector3> GetFullSnakeGridPositionList()
     //{
-    //    List<Vector2Int> snakeGridPositionList = new List<Vector2Int>();
-    //    snakeGridPositionList.AddRange(snakeSegmentsTransformList);
+    //    List<Vector3> snakeGridPositionList = new List<Vector3>();
+    //    foreach (Transform t in snakeSegmentsTransformList)
+    //    {
+    //        snakeGridPositionList.Add(t.position);
+    //    }
     //    return snakeGridPositionList;
     //}
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("MassGainer"))
+        if (collision.CompareTag("MassGainer"))
         {
             SnakeGrow(); // Grow the snake after it eats the food
             Destroy(collision.gameObject);
-        } else if(collision.CompareTag("MassBurner"))
+        }
+        else if (collision.CompareTag("MassBurner"))
         {
             SnakeShrink();
             Destroy(collision.gameObject);
-        }  else if (collision.CompareTag("SnakeBody"))
+        }
+        else if (collision.CompareTag("SnakeBody"))
         {
             SceneManager.LoadScene("GameOverScene");
-        }
+        }  
     }
-
-
 
     private void SnakeGrow()
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -7,17 +8,18 @@ public class GameHandler : MonoBehaviour
 {
     [SerializeField] Snake snake;
     //[SerializeField] private float foodSpawnDuration;
-    [SerializeField] private float foodSpawnDelay;
+    [SerializeField] private float consumableSpawnDelay;
+    //[SerializeField] private float powerUpSpawnDelay;
     private LevelGrid levelGrid;
 
     private int gridX = 19;
     private int gridY = 10;   // grid extents in X and Y direction
 
-    private Vector2Int foodGridPosition;
-    private SpriteRenderer foodGameObject;  // storing the food game object to identify which food to be deleted after snake has eaten it
-    private List<SpriteRenderer> totalFoodSpawned; // List to store the total food items spawned on the game scene
+    private Vector2Int consumableGridPosition;
+    private GameObject consumableGameObject;  // storing the food game object to identify which food to be deleted after snake has eaten it
+    private List<GameObject> totalConsumablesSpawned; // List to store the total consumables spawned on the game scene
     private float timer;
-    private int maxFoodItemsOnScreen = 4;  // max food items allowed on the screen at once
+    private int maxConsumablesOnScreen = 4;  // max consumables allowed on the screen at once
 
     private void Start()
     {
@@ -25,30 +27,24 @@ public class GameHandler : MonoBehaviour
         snake.Setup(levelGrid);
         levelGrid.Setup(snake);
         levelGrid.GameHandlerSetup(this);
-        totalFoodSpawned = new List<SpriteRenderer>();
+        totalConsumablesSpawned = new List<GameObject>();
 
-        timer = foodSpawnDelay;
+        timer = consumableSpawnDelay;
 
-        SpawnFood(); // spawn the food when game starts
+        SpawnConsumable(); // spawn the food when game starts
     }
 
-    private void SpawnFood()
+    private void SpawnConsumable()
     {
         // Getting the grid position to spawn and food item from the list (Mass Burner / Gainer)
-        foodGridPosition = levelGrid.GetSpawnPosition();
-        foodGameObject = levelGrid.GetFoodItemToSpawn();
-        totalFoodSpawned.Insert(0, foodGameObject);
+        consumableGridPosition = levelGrid.GetSpawnPosition();
+        consumableGameObject = levelGrid.GetConsumableToSpawn();
+        totalConsumablesSpawned.Insert(0, consumableGameObject);
 
-        if(totalFoodSpawned.Count <= maxFoodItemsOnScreen)
+        if(totalConsumablesSpawned.Count <= maxConsumablesOnScreen)
         {
-            foodGameObject = Instantiate(levelGrid.GetFoodItemToSpawn(), new Vector3(foodGridPosition.x, foodGridPosition.y), Quaternion.identity);
+            consumableGameObject = Instantiate(levelGrid.GetConsumableToSpawn(), new Vector3(consumableGridPosition.x, consumableGridPosition.y), Quaternion.identity);
         }
-        //Debug.Log("Food items in the list: " + totalFoodSpawned.Count);
-    }
-
-    private void SpawnPowerUps()
-    {
-
     }
 
 
@@ -60,9 +56,9 @@ public class GameHandler : MonoBehaviour
         }
         else
         {
-            SpawnFood();
-            totalFoodSpawned.RemoveAt(totalFoodSpawned.Count - 1);
-            timer = foodSpawnDelay;
+            SpawnConsumable();
+            totalConsumablesSpawned.RemoveAt(totalConsumablesSpawned.Count - 1);
+            timer = consumableSpawnDelay;
         }
     }
 }

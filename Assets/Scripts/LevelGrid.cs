@@ -45,24 +45,18 @@ public class LevelGrid
         return position;
     }
 
-    public SpriteRenderer GetFoodItemToSpawn()
+    public GameObject GetConsumableToSpawn()
     {
         // When Snake length is more than one then only randomize the food items otherwise spawn only mass gainer when we have snake with length 1
-        if (snake.GetSnakeSize() > 1)
+        if (snake.GetSnakeSize() > 1) 
         {
-            SpriteRenderer food = GameAssets.Instance.foodItems[Random.Range(0, GameAssets.Instance.foodItems.Count)];
-            return food;
+            GameObject consumable = GameAssets.Instance.consumablesList[Random.Range(0, GameAssets.Instance.consumablesList.Count)];
+            return consumable;
         } else
         {
-            SpriteRenderer food = GameAssets.Instance.foodItems[0];
-            return food;
+            GameObject consumable = GameAssets.Instance.consumablesList[0];
+            return consumable;
         } 
-    }
-
-    public SpriteRenderer GetPowerUpToSpawn()
-    {
-        SpriteRenderer powerUp = GameAssets.Instance.powerUps[Random.Range(0, GameAssets.Instance.powerUps.Count)];
-        return powerUp;
     }
 
     //public bool TrySnakeEatFood(Vector2Int snakeGridPosition)

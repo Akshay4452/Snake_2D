@@ -8,12 +8,16 @@ public class GameAssets : MonoBehaviour
     public static GameAssets Instance { get { return instance; } }
 
     public Sprite snakeHeadSprite;
-    //public Sprite foodSprite;
-    public List<SpriteRenderer> foodItems;
-    public List<SpriteRenderer> powerUps;
+    public List<GameObject> consumablesList;  // these all items have Consumables script attached to them
 
     private void Awake()
     {
-        instance = this;
+        if(!instance)
+        {
+            instance = this;
+        } else
+        {
+            Destroy(gameObject);
+        }
     }
 }

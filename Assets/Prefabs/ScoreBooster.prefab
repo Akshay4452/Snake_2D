@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 989739752988756550}
   - component: {fileID: 702788174036353420}
   - component: {fileID: 433404951881122173}
+  - component: {fileID: 7118033203996880262}
   m_Layer: 0
   m_Name: ScoreBooster
   m_TagString: ScoreBoost
@@ -111,3 +112,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
+--- !u!114 &7118033203996880262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6858212968154928732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ba10eef3ee49334e8a6a2a232660b92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  consumableType: 3

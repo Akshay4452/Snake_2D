@@ -705,8 +705,8 @@ MonoBehaviour:
   - {fileID: 5519813532879217644, guid: d88789fb475337c44ae5901928b81f65, type: 3}
   - {fileID: 5837191349959206142, guid: 992261e162d8411428b9088a0c9eb6ac, type: 3}
   - {fileID: 3751562347513759299, guid: 6c83ee89ff2c80b4cbe397daf9b15602, type: 3}
-  - {fileID: 7920774994694383049, guid: 7cea212a14c2865429d249449713dd17, type: 3}
-  - {fileID: 6858212968154928732, guid: 0f4367e1685d25c4f9e4709cf7a23b15, type: 3}
+  - {fileID: 3751562347513759299, guid: 6c83ee89ff2c80b4cbe397daf9b15602, type: 3}
+  - {fileID: 3751562347513759299, guid: 6c83ee89ff2c80b4cbe397daf9b15602, type: 3}
 --- !u!1 &1939079397
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,6 +807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridMoveTimerMax: 0.1
+  powerCoolDownTime: 5
   segmentPrefab: {fileID: 927065473731034523, guid: 2e2208825d6137e47b0f2583928f931a, type: 3}
   scoreHandler: {fileID: 886494239}
 --- !u!61 &1939079401

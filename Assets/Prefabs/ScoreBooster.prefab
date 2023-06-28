@@ -124,4 +124,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba10eef3ee49334e8a6a2a232660b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  consumableType: 3
+  <consumableType>k__BackingField: 3

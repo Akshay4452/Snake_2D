@@ -13,6 +13,7 @@ public class Snake : MonoBehaviour
     private float gridMoveTimer; // Time until the next movement
     private LevelGrid levelGrid; // holding the reference to the LevelGrid script
     [SerializeField] private float gridMoveTimerMax; // Time set between two movement instances
+    [SerializeField] private float powerCoolDownTime;
 
     private List<Transform> snakeSegmentsTransformList; // creating list of Transform component to store the snake segment transform
     [SerializeField] private Transform segmentPrefab;
@@ -21,6 +22,11 @@ public class Snake : MonoBehaviour
     //private List<Vector2Int> snakeMovePositionList; // List to store location of all parts of the snake
 
     [SerializeField] private ScoreHandler scoreHandler; // Reference of ScoreHandler script
+
+    // Booleans to store if power up is collected
+    private bool isSpeedBoosted;
+    private bool isShieldActivated;
+    private bool isScoreBoosted;
 
     private void Awake()
     {
@@ -34,6 +40,11 @@ public class Snake : MonoBehaviour
 
         snakeBodySize = 1;   // Initially there will be only snake head
         //snakeMovePositionList = new List<Vector2Int>(); // initialize the list
+
+        // Initialize all the booleans related to power ups
+        isSpeedBoosted= false;
+        isShieldActivated=false;
+        isScoreBoosted= false;
     }
 
     public void Setup(LevelGrid levelGrid)
@@ -45,7 +56,6 @@ public class Snake : MonoBehaviour
     {
         HandleInput();
         HandleGridMovement();
-
     }
 
     private void HandleInput()
@@ -150,21 +160,111 @@ public class Snake : MonoBehaviour
     //    return snakeGridPositionList;
     //}
 
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("MassGainer"))
+    //    {
+    //        SnakeGrow(); // Grow the snake after it eats the food
+    //        Destroy(collision.gameObject);
+    //    }
+    //    else if (collision.CompareTag("MassBurner"))
+    //    {
+    //        SnakeShrink();
+    //        Destroy(collision.gameObject);
+    //    }
+    //    else if (collision.CompareTag("SnakeBody"))
+    //    {
+    //        SceneManager.LoadScene("GameOverScene");
+    //    }  
+    //}
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("MassGainer"))
+        ConsumableType _consumableType = collision.GetComponent<Consumables>().GetConsumableType();
+        switch(_consumableType)
         {
-            SnakeGrow(); // Grow the snake after it eats the food
-            Destroy(collision.gameObject);
+            case ConsumableType.MassGainer:
+                SnakeGrow(); // Grow the snake after it eats the food
+                Destroy(collision.gameObject);
+                break;
+            case ConsumableType.MassBurner:
+                SnakeShrink();
+                Destroy(collision.gameObject);
+                break;
+            case ConsumableType.SpeedBooster:
+                if(!isSpeedBoosted)
+                {
+                    // Collect the Speed Booster only if its not already collected
+                    StartCoroutine(PowerCoolDown(_consumableType, powerCoolDownTime));
+                    Destroy(collision.gameObject);
+                }
+                else
+                {
+                    Debug.Log("Speed Booster is Already Activated");
+                }
+                break;
+            case ConsumableType.Shield:
+                if (!isSpeedBoosted)
+                {
+                    // Collect the Shield only if its not already collected
+                    StartCoroutine(PowerCoolDown(_consumableType, powerCoolDownTime));
+                    Destroy(collision.gameObject);
+                }
+                else
+                {
+                    Debug.Log("Shield is Already Activated");
+                }
+                break;
+            case ConsumableType.ScoreBooster:
+                if (!isScoreBoosted)
+                {
+                    // Collect the Score Booster only if its not already collected
+                    StartCoroutine(PowerCoolDown(_consumableType, powerCoolDownTime));
+                    Destroy(collision.gameObject);
+                }
+                else
+                {
+                    Debug.Log("Score Booster is Already Activated");
+                }
+                break;
+            default:
+                SceneManager.LoadScene("GameOverScene");
+                break;
         }
-        else if (collision.CompareTag("MassBurner"))
+    }
+
+    IEnumerator PowerCoolDown(ConsumableType _con, float powerCoolDownTime)
+    {
+        switch (_con)
         {
-            SnakeShrink();
-            Destroy(collision.gameObject);
-        }
-        else if (collision.CompareTag("SnakeBody"))
-        {
-            SceneManager.LoadScene("GameOverScene");
+            case ConsumableType.SpeedBooster:
+                // make gridMoveTimerMax half of its original value
+                gridMoveTimerMax /= 2;
+                isSpeedBoosted = true;
+                yield return new WaitForSeconds(powerCoolDownTime);
+                gridMoveTimerMax *= 2;
+                isSpeedBoosted = false;
+                break;
+            case ConsumableType.Shield:
+                Debug.Log("Snake Shield Activated");
+                this.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                isShieldActivated = true;
+                yield return new WaitForSeconds(powerCoolDownTime);
+                Debug.Log("Shield Deactivated");
+                this.gameObject.GetComponent<BoxCollider2D>().enabled = true;
+                isShieldActivated = false;
+                break;
+            case ConsumableType.ScoreBooster:
+                scoreHandler.ScoreBooster();
+                Debug.Log("Score Booster Activated");
+                isScoreBoosted = true;
+                yield return new WaitForSeconds(powerCoolDownTime);
+                scoreHandler.DeactivateScoreBooster();
+                Debug.Log("Score Booster Deactivated");
+                isScoreBoosted = false;
+                break;
+            default: 
+                break;
         }  
     }
 

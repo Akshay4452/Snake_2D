@@ -30,14 +30,18 @@ public class ScoreHandler : MonoBehaviour
         scoreText.text = "Score: " + score.ToString(); // Update the UI
     }
 
+    public void ScoreBooster()
+    {
+        increaseScoreBy *= 2; 
+    }
+
+    public void DeactivateScoreBooster()
+    {
+        increaseScoreBy /= 2;
+    }
+
     public int GetScore()
     {
         return score;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

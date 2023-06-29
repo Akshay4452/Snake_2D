@@ -378,7 +378,7 @@ MonoBehaviour:
   gridMoveTimerMax: 0.1
   powerCoolDownTime: 5
   segmentPrefab: {fileID: 927065473731034523, guid: 2e2208825d6137e47b0f2583928f931a, type: 3}
-  scoreHandler: {fileID: 0}
+  scoreHandler: {fileID: 661303078}
 --- !u!212 &475504023
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1383,7 +1383,7 @@ MonoBehaviour:
   gridMoveTimerMax: 0.1
   powerCoolDownTime: 5
   segmentPrefab: {fileID: 927065473731034523, guid: 2e2208825d6137e47b0f2583928f931a, type: 3}
-  scoreHandler: {fileID: 0}
+  scoreHandler: {fileID: 1590416049}
 --- !u!61 &1939079401
 BoxCollider2D:
   m_ObjectHideFlags: 0

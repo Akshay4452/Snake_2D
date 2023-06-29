@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class GameHandler : MonoBehaviour
 {
-    [SerializeField] Snake snake;
+    [SerializeField] Snake snake1;
+    [SerializeField] Snake snake2;
     //[SerializeField] private float foodSpawnDuration;
     [SerializeField] private float consumableSpawnDelay;
     //[SerializeField] private float powerUpSpawnDelay;
@@ -24,8 +25,14 @@ public class GameHandler : MonoBehaviour
     private void Start()
     {
         levelGrid = new LevelGrid(gridX, gridY); // Instantiating the levelGrid object
-        snake.Setup(levelGrid);
-        levelGrid.Setup(snake);
+        snake1.Setup(levelGrid);
+        levelGrid.Setup(snake1);
+        if(snake2!= null)
+        {
+            // Setup the grid for snake2 and also get instance of snake2 in the LevelGrid script
+            snake2.Setup(levelGrid);
+            levelGrid.Setup(snake2);
+        }
         levelGrid.GameHandlerSetup(this);
         totalConsumablesSpawned = new List<GameObject>();
 

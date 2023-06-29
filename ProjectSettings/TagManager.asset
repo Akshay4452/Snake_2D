@@ -3,13 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - MassBurner
-  - MassGainer
-  - SnakeBody
-  - SpeedBoost
-  - Shield
-  - ScoreBoost
+  tags: []
   layers:
   - Default
   - TransparentFX

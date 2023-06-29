@@ -1,13 +1,18 @@
-using CodeMonkey.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum Player
+{
+    Player1,
+    Player2
+}
+
 public class Snake : MonoBehaviour
 {
+    [field: SerializeField] public Player playerID { get; private set; }
     private Vector2Int gridMoveDirection;
     private Vector2Int gridPosition;  // Snake's position in the grid
     private float gridMoveTimer; // Time until the next movement
@@ -22,6 +27,7 @@ public class Snake : MonoBehaviour
     //private List<Vector2Int> snakeMovePositionList; // List to store location of all parts of the snake
 
     [SerializeField] private ScoreHandler scoreHandler; // Reference of ScoreHandler script
+    //[SerializeField] private TextPopUpHandler textPopUpHandler;  // Reference to text pop up handler
 
     // Booleans to store if power up is collected
     private bool isSpeedBoosted;
@@ -30,8 +36,17 @@ public class Snake : MonoBehaviour
 
     private void Awake()
     {
-        gridMoveDirection = new Vector2Int(1, 0); // by default snake will move towards right
-        gridPosition = new Vector2Int(0,0);
+        if(playerID == Player.Player1)
+        {
+            gridMoveDirection = new Vector2Int(1, 0); // by default snake will move towards right
+            gridPosition = new Vector2Int(0, 0);
+        }
+        else
+        {
+            gridMoveDirection = new Vector2Int(-1, 0);  // Snake 2 will move towards right
+            gridPosition = new Vector2Int(0, 2);  // its starting position would be 2 units up from Player1
+        }
+        
         //gridMoveTimerMax = 1f;  // setting gridMoveTimer equals to 1 sec
         gridMoveTimer = gridMoveTimerMax;
 
@@ -59,6 +74,55 @@ public class Snake : MonoBehaviour
     }
 
     private void HandleInput()
+    {
+        if(playerID == Player.Player1)
+        {
+            Player1Controller();
+        }
+        else
+        {
+            Player2Controller();
+        }
+        
+    }
+
+    private void Player2Controller()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            if (gridMoveDirection.y != -1)
+            {
+                gridMoveDirection.y = +1;
+                gridMoveDirection.x = 0;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            if (gridMoveDirection.y != +1)
+            {
+                gridMoveDirection.y = -1;
+                gridMoveDirection.x = 0;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            if (gridMoveDirection.x != -1)
+            {
+                gridMoveDirection.y = 0;
+                gridMoveDirection.x = +1;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            if (gridMoveDirection.x != +1)
+            {
+                gridMoveDirection.y = 0;
+                gridMoveDirection.x = -1;
+            }
+        }
+    }
+
+    public void Player1Controller()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -160,24 +224,6 @@ public class Snake : MonoBehaviour
     //    return snakeGridPositionList;
     //}
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.CompareTag("MassGainer"))
-    //    {
-    //        SnakeGrow(); // Grow the snake after it eats the food
-    //        Destroy(collision.gameObject);
-    //    }
-    //    else if (collision.CompareTag("MassBurner"))
-    //    {
-    //        SnakeShrink();
-    //        Destroy(collision.gameObject);
-    //    }
-    //    else if (collision.CompareTag("SnakeBody"))
-    //    {
-    //        SceneManager.LoadScene("GameOverScene");
-    //    }  
-    //}
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         ConsumableType _consumableType = collision.GetComponent<Consumables>().GetConsumableType();
@@ -188,8 +234,12 @@ public class Snake : MonoBehaviour
                 Destroy(collision.gameObject);
                 break;
             case ConsumableType.MassBurner:
-                SnakeShrink();
-                Destroy(collision.gameObject);
+                if(!isShieldActivated)
+                {
+                    // Only shrink the snake when shield is not activated
+                    SnakeShrink();
+                    Destroy(collision.gameObject);
+                }
                 break;
             case ConsumableType.SpeedBooster:
                 if(!isSpeedBoosted)
@@ -202,9 +252,10 @@ public class Snake : MonoBehaviour
                 {
                     Debug.Log("Speed Booster is Already Activated");
                 }
+                
                 break;
             case ConsumableType.Shield:
-                if (!isSpeedBoosted)
+                if (!isShieldActivated)
                 {
                     // Collect the Shield only if its not already collected
                     StartCoroutine(PowerCoolDown(_consumableType, powerCoolDownTime));
@@ -227,8 +278,10 @@ public class Snake : MonoBehaviour
                     Debug.Log("Score Booster is Already Activated");
                 }
                 break;
-            default:
+            case ConsumableType.SnakeBody:
                 SceneManager.LoadScene("GameOverScene");
+                break;
+            default:
                 break;
         }
     }
@@ -240,18 +293,16 @@ public class Snake : MonoBehaviour
             case ConsumableType.SpeedBooster:
                 // make gridMoveTimerMax half of its original value
                 gridMoveTimerMax /= 2;
-                isSpeedBoosted = true;
+                isSpeedBoosted = true;  // Activate the power up boolean
                 yield return new WaitForSeconds(powerCoolDownTime);
                 gridMoveTimerMax *= 2;
-                isSpeedBoosted = false;
+                isSpeedBoosted = false; // After waiting for cooldown period, reset the power up boolean
                 break;
             case ConsumableType.Shield:
                 Debug.Log("Snake Shield Activated");
-                this.gameObject.GetComponent<BoxCollider2D>().enabled = false;
                 isShieldActivated = true;
                 yield return new WaitForSeconds(powerCoolDownTime);
                 Debug.Log("Shield Deactivated");
-                this.gameObject.GetComponent<BoxCollider2D>().enabled = true;
                 isShieldActivated = false;
                 break;
             case ConsumableType.ScoreBooster:
@@ -275,7 +326,7 @@ public class Snake : MonoBehaviour
         _segment.position = snakeSegmentsTransformList[snakeSegmentsTransformList.Count - 1].position; // setting the position of snake segment as end of snake
         snakeSegmentsTransformList.Add( _segment );
         snakeBodySize++;  // increase the snake body size count by 1
-        scoreHandler.ScoreIncrease(); // UPdate the score as snake grows
+        scoreHandler.ScoreIncrease(playerID); // Update the score as snake grows
     }
 
     private void SnakeShrink()
@@ -292,7 +343,7 @@ public class Snake : MonoBehaviour
             }
             // Need to remove the segment transforms from the list
             snakeSegmentsTransformList.RemoveRange(snakeSegmentsTransformList.Count - 2, 2);
-            scoreHandler.ScoreDecrease();
+            scoreHandler.ScoreDecrease(playerID);
         }
         else
         {

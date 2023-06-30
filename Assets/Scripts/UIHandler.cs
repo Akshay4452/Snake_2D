@@ -1,15 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class UIHandler : MonoBehaviour
 {
+    [SerializeField] private GameOverHandler gameOverHandler;  // reference of GameOverHandler
+    [SerializeField] private TMP_Text playerWonText;
+    
     // This script is used for moving between scenes
-    public void BackToGame()
+    public void BackToMainMenu()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void SinglePlayerScene()

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,6 +33,8 @@ public class Snake : MonoBehaviour
     private bool isShieldActivated;
     private bool isScoreBoosted;
 
+    private bool isSnakeAlive;
+
     private void Awake()
     {
         if(playerID == Player.Player1)
@@ -46,8 +47,7 @@ public class Snake : MonoBehaviour
             gridMoveDirection = new Vector2Int(-1, 0);  // Snake 2 will move towards right
             gridPosition = new Vector2Int(0, 2);  // its starting position would be 2 units up from Player1
         }
-        
-        //gridMoveTimerMax = 1f;  // setting gridMoveTimer equals to 1 sec
+
         gridMoveTimer = gridMoveTimerMax;
 
         snakeSegmentsTransformList = new List<Transform>(); // Initialize the snake segments list
@@ -60,6 +60,8 @@ public class Snake : MonoBehaviour
         isSpeedBoosted= false;
         isShieldActivated=false;
         isScoreBoosted= false;
+
+        isSnakeAlive = true;  // at start the snake is alive until its dead
     }
 
     public void Setup(LevelGrid levelGrid)
@@ -239,6 +241,11 @@ public class Snake : MonoBehaviour
                     // Only shrink the snake when shield is not activated
                     SnakeShrink();
                     Destroy(collision.gameObject);
+                } 
+                else
+                {
+                    Debug.Log("Mass Burner can't hurt the snake right now!!");
+                    Destroy(collision.gameObject);
                 }
                 break;
             case ConsumableType.SpeedBooster:
@@ -251,8 +258,8 @@ public class Snake : MonoBehaviour
                 else
                 {
                     Debug.Log("Speed Booster is Already Activated");
+                    Destroy(collision.gameObject);
                 }
-                
                 break;
             case ConsumableType.Shield:
                 if (!isShieldActivated)
@@ -264,6 +271,7 @@ public class Snake : MonoBehaviour
                 else
                 {
                     Debug.Log("Shield is Already Activated");
+                    Destroy(collision.gameObject);
                 }
                 break;
             case ConsumableType.ScoreBooster:
@@ -276,10 +284,8 @@ public class Snake : MonoBehaviour
                 else
                 {
                     Debug.Log("Score Booster is Already Activated");
+                    Destroy(collision.gameObject);
                 }
-                break;
-            case ConsumableType.SnakeBody:
-                SceneManager.LoadScene("GameOverScene");
                 break;
             default:
                 break;
@@ -347,6 +353,7 @@ public class Snake : MonoBehaviour
         }
         else
         {
+            isSnakeAlive= false; 
             SceneManager.LoadScene("GameOverScene");
         }
     }
@@ -354,5 +361,10 @@ public class Snake : MonoBehaviour
     public int GetSnakeSize()
     {
         return snakeBodySize;
+    }
+
+    public bool isSnakeDead()
+    {
+        return !isSnakeAlive;
     }
 }

@@ -10,7 +10,6 @@ public enum ConsumableType
     Shield,
     ScoreBooster,
     SpeedBooster,
-    SnakeBody // Snake body is not the consumable, but it is used to identify if snake has touched itself
 } 
 
 public class Consumables : MonoBehaviour

@@ -1119,6 +1119,10 @@ MonoBehaviour:
   powerCoolDownTime: 5
   segmentPrefab: {fileID: 927065473731034523, guid: 2e2208825d6137e47b0f2583928f931a, type: 3}
   scoreHandler: {fileID: 104218540}
+  minX: 0
+  maxX: 0
+  minY: 0
+  maxY: 0
 --- !u!61 &1939079401
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -191,12 +191,25 @@ public class Snake : MonoBehaviour
     private void KeepSnakeOnScreen()
     {
         // Screen Wrapping Function
-        if(Mathf.Abs(gridPosition.x) > levelGrid.GetLevelGridExtents().x + 1f)
+        if(gridPosition.x > levelGrid.GetLevelGridExtents().x + 1f)
         {
             gridPosition.x *= -1;
-        } else if(Mathf.Abs(gridPosition.y) > levelGrid.GetLevelGridExtents().y + 1f)
+            gridPosition.x += 1;
+        }
+        else if(gridPosition.x < -levelGrid.GetLevelGridExtents().x - 1f)
+        {
+            gridPosition.x *= -1;
+            gridPosition.x -= 1;
+        }
+        else if(gridPosition.y > levelGrid.GetLevelGridExtents().y + 1f)
         {
             gridPosition.y *= -1;
+            gridPosition.y += 1;
+        }
+        else if (gridPosition.y < -levelGrid.GetLevelGridExtents().y - 1f)
+        {
+            gridPosition.y *= -1;
+            gridPosition.y -= 1;
         }
     }
 
